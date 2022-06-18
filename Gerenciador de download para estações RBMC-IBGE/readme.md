@@ -1,0 +1,1 @@
+Este projeto apresenta uma solução para busca de bases da RBMC-IBGE mais próximas de um determinado local de rastreio. Juntamente com a indicação das 5 estação da RBMC mais proximas, o programa a partir de um input do dia do levantamento, printa os links para download dos arquivos Rinex e da base para cada estação de monitoramento continuo.
