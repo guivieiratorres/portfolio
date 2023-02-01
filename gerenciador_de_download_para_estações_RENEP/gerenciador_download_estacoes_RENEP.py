@@ -1,8 +1,9 @@
 
 import math
-
 import pandas as pd
-
+from numpy import radians
+from numpy import sqrt
+from datetime import datetime
 from Elipsoide import *
 
 
@@ -10,23 +11,12 @@ file_renep= 'gerenciador_de_download_para_estações_RENEP/estacoes_RENEP.csv'
 df = pd.read_csv(file_renep, encoding = 'utf-8', delimiter = ';')
 df.head(20)
 
-# CALCULO PARA CONVERTER COORDENADAS GEODESICAS EM CARTESIANAS TRIDIMENSIONAIS
 
-from numpy import radians
-
-
-
-grs80 = Elipsoide()
-
-
-
-from numpy import sqrt
 # FUNCAO PARA CALCULAR A DISTANCIA ENTRE COORDENADAS CARTESIANAS 3D
 def calc_dist(x2,x1,y2,y1,z2,z1):
   return math.sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2 - z1)**2)
 
 # SCRIPT PARA IDENTIFICAR O DIA DO RASTREIO
-from datetime import datetime
 
 data = datetime.strptime(str(input("Data do rastreio GNSS (dd/mm/aaaa): ")), "%d/%m/%Y") #data do rastreio que deseja-se fazer download
 data_zero = datetime.strptime("01/01/" + str(data)[:4], "%d/%m/%Y") #data zero para contagem
@@ -43,6 +33,8 @@ h = 0
 
 
 # CRIA DICT COM KEY= NOME DAS ESTAÇÕES E VALUE = DIST. ENTRE COORDENADA DE ENTRADA
+
+grs80 = Elipsoide()
 
 i=0
 st = {}
@@ -174,6 +166,3 @@ for letra in faixa_hora[id_inicio:id_fim]:
     print('Link para download dos arquivos RINEX:')
     print("ftp://ftp.dgterritorio.pt/ReNEP/"+i+"/"+str(data)[:4]+"/"+str(data)[5:7]+"/"+str(data)[8:10]+"/"+i.lower()+str(calc_data)+letra+".zip"+'\n') # linha para baixar os arquivos Rinex.
     print('___________________________________________________________________\n')
-
-
-
