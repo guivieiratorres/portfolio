@@ -3,7 +3,8 @@ import math
 
 import pandas as pd
 
-import Elipsoide
+from Elipsoide import *
+
 
 file_renep= 'gerenciador_de_download_para_estações_RENEP/estacoes_RENEP.csv'
 df = pd.read_csv(file_renep, encoding = 'utf-8', delimiter = ';')
@@ -14,16 +15,8 @@ df.head(20)
 from numpy import radians
 
 
-# FORMULAÇÃO GEODESICA (PARÂMETROS DO ELIPSOIDE GRS80)
 
-a_grs80 = 6378137  # semi eixo maior
-b_grs80 = 6356752.3141  # semi eixo menor
-e1_grs80 = 0.00669438002290  # 1º excentricidade
-e2_grs80 = 0.00673949677548  # 2º excentricidade
-f_grs80 = 0.00335281068118  # achatamento
-
-
-grs80 = Elipsoide(a= a_grs80, b= b_grs80, e1= e1_grs80, e2= e2_grs80, f= f_grs80)
+grs80 = Elipsoide()
 
 
 

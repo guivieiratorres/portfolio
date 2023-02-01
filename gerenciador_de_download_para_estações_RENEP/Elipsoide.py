@@ -6,9 +6,18 @@ class Elipsoide:
     """Classe que cria objeto do tipo Elipsoide, esse objeto pode ser configurado para
     qualquer sistema de referencia passando os parametros do elipsoide.
 
-    *com essa classe pode-se fazer a conversão de coordenadas geodesicas para cartesianas 3D."""
+    OBS: Por default a classe assume a configuração do elipsoide GRS80.
 
-    def __init__(self, a, b, e1, e2, f):
+    *com essa classe pode-se fazer a conversão de coordenadas geodesicas para cartesianas 3D.
+
+     a: semi eixo maior
+     b: semi eixo menor
+    e1: 1º excentricidade
+    e2: 2º excentricidade
+     f: achatamento
+    """
+
+    def __init__(self, a=6378137.0, b=6356752.3141, e1=0.00669438002290, e2=0.00673949677548, f=0.00335281068118):
         self.a = a  # semi eixo maior
         self.b = b  # semi eixo menor
         self.e1 = e1  # 1º excentricidade
@@ -22,16 +31,9 @@ class Elipsoide:
 
         GN = (self.a / (1 - self.e1 * (math.sin(radians(lat))) ** 2) ** 0.5)  # Grande Normal
 
-        PN = (self.a * (1 - self.e1) / (1 - self.e1 * (math.sin(radians(lat))) ** 2) ** 0.5 )  # Pequena Normal
+        PN = (self.a * (1 - self.e1) / (1 - self.e1 * (math.sin(radians(lat))) ** 2) ** 0.5)  # Pequena Normal
 
         X = (GN + h) * math.cos(radians(lat)) * math.cos(radians(lng))
         Y = (GN + h) * math.cos(radians(lat)) * math.sin(radians(lng))
         Z = (PN + h) * math.sin(radians(lat))
         return (X, Y, Z)
-
-
-a_grs80 = 6378137  # semi eixo maior
-b_grs80 = 6356752.3141  # semi eixo menor
-e1_grs80 = 0.00669438002290  # 1º excentricidade
-e2_grs80 = 0.00673949677548  # 2º excentricidade
-f_grs80 = 0.00335281068118  # achatamento
