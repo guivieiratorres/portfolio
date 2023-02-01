@@ -20,14 +20,9 @@ class Elipsoide:
         self.lng = lng
         self.h = h
 
-        GN = (
-            self.a / (1 - self.e1 * (math.sin(radians(lat))) ** 2) ** 0.5
-        )  # Grande Normal
-        PN = (
-            self.a
-            * (1 - self.e1)
-            / (1 - self.e1 * (math.sin(radians(lat))) ** 2) ** 0.5
-        )  # Pequena Normal
+        GN = (self.a / (1 - self.e1 * (math.sin(radians(lat))) ** 2) ** 0.5 )  # Grande Normal
+
+        PN = (self.a * (1 - self.e1) / (1 - self.e1 * (math.sin(radians(lat))) ** 2) ** 0.5)  # Pequena Normal
 
         X = (GN + h) * math.cos(radians(lat)) * math.cos(radians(lng))
         Y = (GN + h) * math.cos(radians(lat)) * math.sin(radians(lng))
