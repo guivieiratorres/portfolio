@@ -3,6 +3,7 @@ import math
 
 import pandas as pd
 
+import Elipsoide
 
 file_renep= 'gerenciador_de_download_para_estações_RENEP/estacoes_RENEP.csv'
 df = pd.read_csv(file_renep, encoding = 'utf-8', delimiter = ';')
@@ -12,22 +13,19 @@ df.head(20)
 
 from numpy import radians
 
-def geo_to_cart3d(lat,lng,h):
 
-#FORMULAÇÃO GEODESICA (PARÂMETROS DO ELIPSOIDE GRS80)
+# FORMULAÇÃO GEODESICA (PARÂMETROS DO ELIPSOIDE GRS80)
 
-  a = 6378137 #semi eixo maior
-  b = 6356752.3141 #semi eixo menor
-  e1 = 0.00669438002290 #1º excentricidade
-  e2 = 0.00673949677548 #2º excentricidade
-  f = 0.00335281068118 #achatamento
+a_grs80 = 6378137  # semi eixo maior
+b_grs80 = 6356752.3141  # semi eixo menor
+e1_grs80 = 0.00669438002290  # 1º excentricidade
+e2_grs80 = 0.00673949677548  # 2º excentricidade
+f_grs80 = 0.00335281068118  # achatamento
 
-  PN = a*(1 - e1)/(1 - e1 * (math.sin(radians(lat)))**2)**0.5 # Pequena Normal
-  GN = a/(1 - e1 * (math.sin(radians(lat)))**2)**0.5 # Grande Normal
-  X = (GN + h) * math.cos(radians(lat)) * math.cos(radians(lng))
-  Y = (GN + h) * math.cos(radians(lat)) * math.sin(radians(lng))
-  Z = (PN + h) * math.sin(radians(lat))
-  return (X,Y,Z)
+
+grs80 = Elipsoide(a= a_grs80, b= b_grs80, e1= e1_grs80, e2= e2_grs80, f= f_grs80)
+
+
 
 from numpy import sqrt
 # FUNCAO PARA CALCULAR A DISTANCIA ENTRE COORDENADAS CARTESIANAS 3D
@@ -49,18 +47,7 @@ print(calc_data)
 lat = float(input('Digite as coordenadas geodésicas - Latitude(g.ggg° ex: 41.047013): '))
 lng = float(input('Digite as coordenadas geodésicas - Longitude(g.ggg° ex: -7.04246): '))
 h = 0
-# CRIANDO/PLOTANDO LINHAS COM NOME ESTACAO , COORD CARTESIANAS 3D , DIST DO PONTO DE ANALISE 
 
-'''
-i=0
-print('Est   |                            Coord XYZ                            |  Distância') #cabeçalho
-while i < len(df.index):
-  print(df.iloc[i]['Nome_est'],geo_to_cart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0),
-        round(calc_dist(geo_to_cart3d(lat,lng,h)[0],geo_to_cart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[0],
-          geo_to_cart3d(lat,lng,h)[1],geo_to_cart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[1],
-          geo_to_cart3d(lat,lng,h)[2],geo_to_cart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[2]),3), sep = '  |  ' )
-  i = i+1
-'''
 
 # CRIA DICT COM KEY= NOME DAS ESTAÇÕES E VALUE = DIST. ENTRE COORDENADA DE ENTRADA
 
@@ -68,9 +55,9 @@ i=0
 st = {}
 while i < len(df.index):
 
-  st[df.iloc[i]['Nome_est']] = round(calc_dist(geo_to_cart3d(lat,lng,h)[0],geo_to_cart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[0],
-          geo_to_cart3d(lat,lng,h)[1],geo_to_cart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[1],
-          geo_to_cart3d(lat,lng,h)[2],geo_to_cart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[2]),3)
+  st[df.iloc[i]['Nome_est']] = round(calc_dist(grs80.GeoToCart3d(lat,lng)[0],grs80.GeoToCart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[0],
+          grs80.GeoToCart3d(lat,lng)[1],grs80.GeoToCart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[1],
+          grs80.GeoToCart3d(lat,lng)[2],grs80.GeoToCart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[2]),3)
   i = i+1
 
 
