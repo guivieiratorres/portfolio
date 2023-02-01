@@ -13,7 +13,8 @@ import math
 import pandas as pd
 
 #df = pd.read_csv("C:/Users/guilherme.torres/PycharmProjects/pythonProject/gerenciador_de_download_para_estações_RENEP/estacoes_RENEP.csv", encoding = 'utf-8', delimiter = ';')
-df = pd.read_csv("estacoes_RENEP.csv", encoding = 'utf-8', delimiter = ';')
+file_renep= 'C:\guilherme.torres\Projetos_VScode\portifolio_github\portfolio\gerenciador_de_download_para_estações_RENEP\estacoes_RENEP.csv'
+df = pd.read_csv(file_renep, encoding = 'utf-8', delimiter = ';')
 df.head(20)
 
 # CALCULO PARA CONVERTER COORDENADAS GEODESICAS EM CARTESIANAS TRIDIMENSIONAIS
