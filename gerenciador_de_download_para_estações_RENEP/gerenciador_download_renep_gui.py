@@ -6,6 +6,8 @@ from tkinter import filedialog
 #import gerenciador_de_download_para_estações_RENEP
 from datetime import datetime
 from tkinter.tix import * #lib para texto flutuante
+from numpy import radians
+from Elipsoide import *
 
 #  -------- CONFIGURACAO DA PAGINA -------------------
 
@@ -334,15 +336,6 @@ root.mainloop()
 ### SCRIPT
 
 
-"""
-data_lev = datetime.strptime(str("10/09/2022"), "%d/%m/%Y")
-ilat = 31.4545
-ilng = 51.4545
-hi = "04"
-hf = "05"
-path = "C:/Users/GEOME188/PycharmProjects/pythonProject/gerenciador_de_download_para_estações_RENEP/rinex/paste3"
-"""
-
 from numpy import sqrt
 from tkinter import *
 from tkinter import filedialog
@@ -356,26 +349,6 @@ import pandas as pd
 df = pd.read_csv("gerenciador_de_download_para_estações_RENEP/estacoes_RENEP.csv", encoding = 'utf-8', delimiter = ';')
 df.head(20)
 
-# CALCULO PARA CONVERTER COORDENADAS GEODESICAS EM CARTESIANAS TRIDIMENSIONAIS
-
-from numpy import radians
-
-def geo_to_cart3d(lat,lng,h):
-
-#FORMULAÇÃO GEODESICA (PARÂMETROS DO ELIPSOIDE GRS80)
-
-  a = 6378137 #semi eixo maior
-  b = 6356752.3141 #semi eixo menor
-  e1 = 0.00669438002290 #1º excentricidade
-  e2 = 0.00673949677548 #2º excentricidade
-  f = 0.00335281068118 #achatamento
-
-  PN = a*(1 - e1)/(1 - e1 * (math.sin(radians(lat)))**2)**0.5 # Pequena Normal
-  GN = a/(1 - e1 * (math.sin(radians(lat)))**2)**0.5 # Grande Normal
-  X = (GN + h) * math.cos(radians(lat)) * math.cos(radians(lng))
-  Y = (GN + h) * math.cos(radians(lat)) * math.sin(radians(lng))
-  Z = (PN + h) * math.sin(radians(lat))
-  return (X,Y,Z)
 
 
 # FUNCAO PARA CALCULAR A DISTANCIA ENTRE COORDENADAS CARTESIANAS 3D
@@ -396,21 +369,20 @@ print(calc_data)
 
 lat = float(ilat)
 lng = float(ilng)
-#h = float(input('Digite as coordenadas geodésicas - Altitude elipsoidal(m ex: 20.316): '))
-h = 0
-
-
 
 
 # CRIA DICT COM KEY= NOME DAS ESTAÇÕES E VALUE = DIST. ENTRE COORDENADA DE ENTRADA
+
+
+grs80 = Elipsoide()
 
 i=0
 st = {}
 while i < len(df.index):
 
-  st[df.iloc[i]['Nome_est']] = round(calc_dist(geo_to_cart3d(lat,lng,h)[0],geo_to_cart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[0],
-          geo_to_cart3d(lat,lng,h)[1],geo_to_cart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[1],
-          geo_to_cart3d(lat,lng,h)[2],geo_to_cart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[2]),3)
+  st[df.iloc[i]['Nome_est']] = round(calc_dist(grs80.GeoToCart3d(lat,lng)[0],grs80.GeoToCart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[0],
+          grs80.GeoToCart3d(lat,lng)[1],grs80.GeoToCart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[1],
+          grs80.GeoToCart3d(lat,lng)[2],grs80.GeoToCart3d(df.iloc[i]['lat_aprox'],df.iloc[i]['lng_aprox'],0)[2]),3)
   i = i+1
 
 
@@ -526,7 +498,6 @@ def get_key_fim(val):
     if val == value:
       return key
 
-#ftp://ftp.dgterritorio.pt/ReNEP/AGUE/2022/07/20/ague201x.zip   MODELO DE LINK
 
 print('\n\n' + str(quant_estacao) + ' ESTAÇÕES RENEP MAIS PRÓXIMAS PARA O RASTREIO DO DIA ' + str(data)[:10] + '\n')
 for letra in faixa_hora[id_inicio:id_fim]:
@@ -535,9 +506,6 @@ for letra in faixa_hora[id_inicio:id_fim]:
     print('Link para download dos arquivos RINEX:')
     print("ftp://ftp.dgterritorio.pt/ReNEP/"+i+"/"+str(data)[:4]+"/"+str(data)[5:7]+"/"+str(data)[8:10]+"/"+i.lower()+str(calc_data)+letra+".zip"+'\n') # linha para baixar os arquivos Rinex.
   print('___________________________________________________________________\n')
-    #print('Link para download do Relatório de Informação de Estação:')
-    #print("https://geoftp.ibge.gov.br/informacoes_sobre_posicionamento_geodesico/rbmc/relatorio/Descritivo_"+i+'\n')
-
 
 
 baixar_arquivos = 'y'
@@ -557,29 +525,5 @@ if baixar_arquivos == 'y':
 
 
 
-#SCRIPT PARA GERAR O ARQUIVO TXT COM OS LINKS DE DOWNLOAD + RALATÓRIO DE INFO PARA CADA BASE.
-"""
-with open(path_local + "/" + 'links_estacoes_RENEP.txt', 'w') as arquivo:
-  arquivo.write(str(quantidade_estacao) +' ESTAÇÕES MAIS PRÓXIMAS PARA O RASTREIO DO DIA ' + str(data) + '\n\n')
-  for i in list(st_ordem.keys()):
-    arquivo.write(i + ': Dist.'+ str(st_ordem[i]) + 'Km'+ '\n')
-    arquivo.write('Link para download dos arquivos RINEX:'+ '\n')
-    arquivo.write("ftp://ftp.dgterritorio.pt/ReNEP/"+i+"/"+str(data)[:4]+"/"+str(data)[5:7]+"/"+str(data)[8:10]+"/"+i.lower()+str(calc_data)+letra+".zip"+'\n\n')
-    arquivo.write('Link para download do Relatório de Informação de Estação:'+ '\n')
-    arquivo.write(df.iloc[df.index[df['Nome_est'] == i].tolist()[0]]['link_descritivo'] + '\n\n')
-    arquivo.write('_________________________________________________________________________________________________________________' + '\n\n')
-  arquivo.write('\n\n' + 'Desenvolvido por, Guilherme Torres.'+ '\n')
-  arquivo.write('Contato: guilhervieto@gmail.com')
-
-"""
-
 print("\n\nDownload finalizado!")
 
-"""# PÁGINA 2
-
-root2 = Tk()
-root2.title("RESULTADOS - Gerenciador de Downloads para Arquivos RINEX - RENEP")
-
-
-
-root2.mainloop()"""
