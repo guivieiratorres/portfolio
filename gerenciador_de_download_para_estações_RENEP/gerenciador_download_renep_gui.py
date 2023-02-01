@@ -26,7 +26,7 @@ posy_pg = 0 #(dimy_screen/2) - (dimy_pg/2)
 
 
 
-root.iconbitmap("icon/icon_download.ico")
+root.iconbitmap("gerenciador_de_download_para_estações_RENEP/icon/icon_download.ico")
 root["bg"] = "#DEDEDE" # cor baseada no sistema de cores hexadecimal
 root.geometry("%dx%d+%d+%d" %(dimx_pg, dimy_pg, posx_pg, posy_pg)) # tamanho da pag + posicionamento
 root.resizable(FALSE,TRUE) # possibilita redimensionar a janelas em ambos eixos.
@@ -353,7 +353,7 @@ import math
 import pandas as pd
 
 
-df = pd.read_csv("estacoes_RENEP1.csv", encoding = 'utf-8', delimiter = ';')
+df = pd.read_csv("gerenciador_de_download_para_estações_RENEP/estacoes_RENEP.csv", encoding = 'utf-8', delimiter = ';')
 df.head(20)
 
 # CALCULO PARA CONVERTER COORDENADAS GEODESICAS EM CARTESIANAS TRIDIMENSIONAIS
