@@ -193,7 +193,7 @@ for letra in faixa_hora[id_inicio:id_fim]:
     print(i, ': Dist.', st_ordem[i], 'Km | Hora:', get_key_inicio(letra), 'às', get_key_fim(letra) )
     print('Link para download dos arquivos RINEX:')
     print("ftp://ftp.dgterritorio.pt/ReNEP/"+i+"/"+str(data)[:4]+"/"+str(data)[5:7]+"/"+str(data)[8:10]+"/"+i.lower()+str(calc_data)+letra+".zip"+'\n') # linha para baixar os arquivos Rinex.
-  print('___________________________________________________________________\n')
+    print('___________________________________________________________________\n')
 
 
 
