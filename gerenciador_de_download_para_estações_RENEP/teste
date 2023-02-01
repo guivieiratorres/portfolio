@@ -10,5 +10,4 @@ f_grs80 = 0.00335281068118  # achatamento
 
 teste = Elipsoide(a= a_grs80, b= b_grs80, e1= e1_grs80, e2= e2_grs80, f= f_grs80)
 
-calc = teste.Geo
 
