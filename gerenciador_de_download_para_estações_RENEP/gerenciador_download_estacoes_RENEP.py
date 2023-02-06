@@ -22,7 +22,11 @@ data = datetime.strptime(str(input("Data do rastreio GNSS (dd/mm/aaaa): ")), "%d
 data_zero = datetime.strptime("01/01/" + str(data)[:4], "%d/%m/%Y") #data zero para contagem
 
 calc_data_preliminar = data - data_zero #calculo preliminar para definir os dias corridos da data
-calc_data = int(str(calc_data_preliminar)[:3]) + 1 #calculo para definir os dias corridos da data
+
+if (int(str(calc_data_preliminar)[:3]) + 1) < 99:
+  calc_data = '0' + str((int(str(calc_data_preliminar)[:3]) + 1)) #calculo para definir os dias corridos da data
+else:
+  calc_data = str((int(str(calc_data_preliminar)[:3]) + 1)) #calculo para definir os dias corridos da data
 print(calc_data)
 
 
