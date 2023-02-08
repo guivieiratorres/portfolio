@@ -8,6 +8,7 @@ from datetime import datetime
 from tkinter.tix import * #lib para texto flutuante
 from numpy import radians
 from Elipsoide import *
+from GDE_RENEP import *
 
 #  -------- CONFIGURACAO DA PAGINA -------------------
 
@@ -345,8 +346,8 @@ import math
 
 import pandas as pd
 
-file_renep= 'C:/guilherme.torres/Projetos_VScode/portifolio_github/portfolio/gerenciador_de_download_para_estações_RENEP/estacoes_RENEP.csv'
-df = pd.read_csv(file_renep, encoding = 'utf-8', delimiter = ';')
+
+df = pd.read_csv("gerenciador_de_download_para_estações_RENEP/estacoes_RENEP.csv", encoding = 'utf-8', delimiter = ';')
 df.head(20)
 
 
@@ -363,7 +364,7 @@ data_zero = datetime.strptime("01/01/" + str(data)[:4], "%d/%m/%Y") #data zero p
 
 calc_data_preliminar = data - data_zero #calculo preliminar para definir os dias corridos da data
 
-if (int(str(calc_data_preliminar)[:3]) + 1) <= 99:
+if (int(str(calc_data_preliminar)[:3]) + 1) < 99:
   calc_data = '0' + str((int(str(calc_data_preliminar)[:3]) + 1)) #calculo para definir os dias corridos da data
 else:
   calc_data = str((int(str(calc_data_preliminar)[:3]) + 1)) #calculo para definir os dias corridos da data
@@ -503,7 +504,7 @@ def get_key_fim(val):
       return key
 
 
-print('\n\n' + str(quant_estacao) + ' BASE(S) RENEP MAIS PRÓXIMAS PARA O RASTREIO DO DIA ' + str(data)[:10] + '\n')
+print('\n\n' + str(quant_estacao) + ' ESTAÇÕES RENEP MAIS PRÓXIMAS PARA O RASTREIO DO DIA ' + str(data)[:10] + '\n')
 for letra in faixa_hora[id_inicio:id_fim]:
   for i in list(st_ordem.keys()):
     print(i, ': Dist.', st_ordem[i], 'Km | Hora:', get_key_inicio(letra), 'às', get_key_fim(letra) )
