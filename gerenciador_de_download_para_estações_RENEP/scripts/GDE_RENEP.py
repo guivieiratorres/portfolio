@@ -14,10 +14,10 @@ df.head(20)
 class GdeRenep:
     
 
-    def __init__(self, date_work, lat, lng, track_start_time, track_end_time, n_station=1):
+    def __init__(self, date_work, lat_work, lng_work, track_start_time, track_end_time, n_station=1):
         self.date_work = datetime.strptime(str(date_work), "%d/%m/%Y") #data do rastreio que deseja-se fazer download
-        self.lat = lat
-        self.lng = lng
+        self.lat_work = lat_work
+        self.lng_work = lng_work
         self.track_start_time = track_start_time
         self.track_end_time = track_end_time
         self.n_station = n_station
@@ -37,49 +37,44 @@ class GdeRenep:
 
 
     # FUNCAO PARA CALCULAR A DISTANCIA ENTRE COORDENADAS CARTESIANAS 3D
-    def CalcDist(self, lat_renep, lng_renep):
+    def CalcDist(self,sgr, lat_renep, lng_renep):
+        sgr = Elipsoide()
         #lat_work = self.lat
         #lng_work = self.lng
-        X1 = Elipsoide.GeoToCart3d(lat= self.lat, lng=self.lng)[0]
-        Y1 = Elipsoide.GeoToCart3d(lat= self.lat, lng=self.lng)[1]
-        X2 = Elipsoide.GeoToCart3d(lat= lat_renep, lng=lng_renep)[0]
-        Y2 = Elipsoide.GeoToCart3d(lat= lat_renep, lng=lng_renep)[1]
+        X1 = sgr.GeoToCart3d(lat= self.lat_work, lng=self.lng_work)[0]
+        X2 = sgr.GeoToCart3d(lat= lat_renep, lng=lng_renep)[0]
+        Y1 = sgr.GeoToCart3d(lat= self.lat_work, lng=self.lng_work)[1]
+        Y2 = sgr.GeoToCart3d(lat= lat_renep, lng=lng_renep)[1]
+        Z1 = sgr.GeoToCart3d(lat= self.lat_work, lng=self.lng_work)[2]
+        Z2 = sgr.GeoToCart3d(lat= lat_renep, lng=lng_renep)[2]
         
-        return math.sqrt((X1 - X2) ** 2 + (Y1 - Y2) ** 2)
+        return math.sqrt((X1 - X2) ** 2 + (Y1 - Y2) ** 2  + (Z1 - Z2) ** 2)
         
-teste = GdeRenep(lat=41, lng=-7, track_start_time=12, track_end_time=14, n_station=1, date_work='09/04/2022')
-
+        
+p1 = GdeRenep(lat_work=41, lng_work=-7, track_start_time=12, track_end_time=14, n_station=1, date_work='09/04/2022')
+sgr_teste = Elipsoide()
 #print(type(teste.date_work))
 
-dias = teste.ConsecutiveDays()
+dias = p1.ConsecutiveDays()
 
 print(dias)
 
-'''numeros = "12"
-print(numeros.split(" d")[0])'''
+#1;AGUE;;40.575580500000;-8.446893330000
 
-'''data1 = datetime.strptime("01/01/2023", "%d/%m/%Y")
-data2 = datetime.strptime("09/01/2023", "%d/%m/%Y")
+ague_lat = 40.575580500000
+ague_lng = -8.446893330000
 
-data_prep = (data2 - data1).days
-print(data_prep, type(data_prep))'''
+calc_p1 = p1.CalcDist(sgr=sgr_teste, lat_renep=ague_lat,lng_renep=ague_lng)
 
-#teste= int(data_prep.total_seconds())
-'''teste= data_prep.days
-print('teste:',teste)'''
+print(calc_p1)
 
-'''data = str(data_prep)[:3].split(" d",)[0]
-print(data)
-data = str(data_prep)[:3].split(":0",)[0]
+        
+p2 = GdeRenep(lat_work=40.5, lng_work=-8.5, track_start_time=12, track_end_time=14, n_station=1, date_work='09/04/2022')
 
-print(data)'''
+calc_p2 = p2.CalcDist(sgr=sgr_teste, lat_renep=ague_lat,lng_renep=ague_lng)
+print(calc_p2)
 
-'''import datetime
-current_date = datetime.datetime.now()
-
-print(current_date, type(current_date))
-print("Date and Time in Integer Format:",
-      int(current_date.strftime("%d")))'''
+print(calc_p1-130901.369)
 
 
 '''
